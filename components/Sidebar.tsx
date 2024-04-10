@@ -37,7 +37,6 @@ const Sidebar = () => {
           );
         })}
       </div>
-      sidebar
     </section>
   );
 };
