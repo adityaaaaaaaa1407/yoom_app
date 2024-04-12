@@ -3,12 +3,46 @@
 import React, { useState } from "react";
 import HomeCard from "./HomeCard";
 import MeetingModal from "./MeetingModal";
+import { useUser } from "@clerk/nextjs";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
 const MeetingTypeList = () => {
   const [meetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
   >();
-  const createMeeting = () => {};
+  const { user } = useUser();
+  const client = useStreamVideoClient();
+  const [values, setValues] = useState({
+    dataTime: new Date(),
+    description: "",
+    link: "",
+  });
+  const [callDetails, setCallDetails] = useState<Call>();
+  const createMeeting = async () => {
+    if (!client || !user) return;
+    try {
+      const id = crypto.randomUUID();
+      const call = client.call("default", id);
+      if (!call) throw new Error("call not created");
+      const startsAt =
+        values.dataTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || "Instant meeting";
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: {
+            description,
+          },
+        },
+      });
+      setCallDetails(call);
+      if (!values.description) {
+       return router.push(`/meeting/${call.id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
       <HomeCard
