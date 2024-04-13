@@ -2,13 +2,14 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { ReactNode } from "react";
 
 interface MeetingModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   handleClick?: () => void;
   buttonText?: string;
   image?: string;

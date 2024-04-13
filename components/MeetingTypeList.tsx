@@ -5,15 +5,18 @@ import HomeCard from "./HomeCard";
 import MeetingModal from "./MeetingModal";
 import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { useRouter } from "next/navigation";
 
 const MeetingTypeList = () => {
+  const router = useRouter();
   const [meetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
   >();
+
   const { user } = useUser();
   const client = useStreamVideoClient();
   const [values, setValues] = useState({
-    dataTime: new Date(),
+    dateTime: new Date(),
     description: "",
     link: "",
   });
@@ -25,7 +28,7 @@ const MeetingTypeList = () => {
       const call = client.call("default", id);
       if (!call) throw new Error("call not created");
       const startsAt =
-        values.dataTime.toISOString() || new Date(Date.now()).toISOString();
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
       const description = values.description || "Instant meeting";
       await call.getOrCreate({
         data: {
@@ -37,7 +40,7 @@ const MeetingTypeList = () => {
       });
       setCallDetails(call);
       if (!values.description) {
-       return router.push(`/meeting/${call.id}`);
+        router.push(`/meeting/${call.id}`);
       }
     } catch (error) {
       console.log(error);
@@ -73,6 +76,7 @@ const MeetingTypeList = () => {
         handleClick={() => setMeetingState("isJoiningMeeting")}
         className="bg-yellow-1"
       />
+
       <MeetingModal
         isOpen={meetingState === "isInstantMeeting"}
         onClose={() => setMeetingState(undefined)}
@@ -80,7 +84,9 @@ const MeetingTypeList = () => {
         className="text-center"
         buttonText="Start Meeting"
         handleClick={createMeeting}
-      />
+      >
+        children
+      </MeetingModal>
     </section>
   );
 };
