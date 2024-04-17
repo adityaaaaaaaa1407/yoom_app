@@ -3,8 +3,10 @@ import {
   CallControls,
   CallParticipantsList,
   CallStatsButton,
+  CallingState,
   PaginatedGridLayout,
   SpeakerLayout,
+  useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import {
   DropdownMenu,
@@ -19,6 +21,7 @@ import React, { useState } from "react";
 import { LayoutList, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import EndCallButton from "./EndCallButton";
+import Loader from "./Loader";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 const MeetingRoom = () => {
@@ -27,7 +30,9 @@ const MeetingRoom = () => {
   // const router = useRouter()
   const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
   const [showParticipants, setShowParticipants] = useState(false);
-
+  const { useCallCallingState } = useCallStateHooks();
+  const callingState = useCallCallingState();
+  if (callingState !== CallingState.JOINED) return <Loader />;
   const CallLayout = () => {
     switch (layout) {
       case "grid":
@@ -52,7 +57,7 @@ const MeetingRoom = () => {
           <CallParticipantsList onClose={() => setShowParticipants(false)} />
         </div>
       </div>
-      <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
+      <div className="fixed bottom-0 flex w-full items-center justify-center gap-5 flex-wrap">
         <CallControls />
         <DropdownMenu>
           <div className="flex items-center">
@@ -82,9 +87,7 @@ const MeetingRoom = () => {
             <Users size={20} className="text-white" />
           </div>
         </Button>
-        {!isPersonalRoom && (
-          <EndCallButton/>
-        )}
+        {!isPersonalRoom && <EndCallButton />}
       </div>
     </section>
   );
