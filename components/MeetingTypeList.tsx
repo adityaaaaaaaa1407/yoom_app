@@ -145,7 +145,8 @@ const MeetingTypeList = () => {
           image="/icons/checked.svg"
           buttonIcon="/icons/copy.svg"
           buttonText="Copy Meeting Link"
-        />
+        >
+          .</MeetingModal>
       )}
       <MeetingModal
         isOpen={meetingState === "isInstantMeeting"}
@@ -154,7 +155,9 @@ const MeetingTypeList = () => {
         className="text-center"
         buttonText="Start Meeting"
         handleClick={createMeeting}
-      ></MeetingModal>
+      >
+        .
+      </MeetingModal>
       <MeetingModal
         isOpen={meetingState === "isJoiningMeeting"}
         onClose={() => setMeetingState(undefined)}
