@@ -8,7 +8,7 @@ const Home = () => {
     minute: "2-digit",
     hour12: true,
   });
-  const date = new Intl.DateTimeFormat("en-US", {
+  const date = new Intl.DateTimeFormat("en-IN", {
     weekday: "long",
     year: "numeric",
     month: "long",
