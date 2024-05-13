@@ -3,12 +3,12 @@ import React from "react";
 
 const Home = () => {
   const now = new Date();
-  const time = now.toLocaleTimeString("en-US", {
+  const time = now.toLocaleTimeString("en-IN", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   });
-  const date = new Intl.DateTimeFormat("en-IN", {
+  const date = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
